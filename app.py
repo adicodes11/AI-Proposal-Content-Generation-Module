@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 import requests
 from pymongo import MongoClient
@@ -18,13 +19,10 @@ car_spec_collection = db["CarSpecificationDataset"]
 ai_generated_content_collection = db["AIGeneratedProposalContent"]
 users_collection = db["users"]
 
-
 # Add a root route to serve a welcome message
 @app.route('/')
 def index():
     return "Welcome to the Proposal Generation API!", 200
-
-
 
 def generate_text_with_gemini(prompt):
     api_key = "AIzaSyD5RZ3PQxTMHl36Q9Qfz_EutgSIs2kLaHw"
@@ -262,5 +260,7 @@ def generate_proposal():
     # Return the generated proposal as a response
     return jsonify(content), 200
 
+# Bind to 0.0.0.0 and dynamically set the port
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5001)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port)
